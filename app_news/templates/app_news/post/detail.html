@@ -1,0 +1,42 @@
+{% extends 'login/main.html' %}
+{% block title %}{{ post.title}}{% endblock %}
+{% block content %}
+{% load app_news_extras %}
+    <h1> {{ post.title }} </h1>
+    <p>Опубликован: {{ post.publish }} {{ post.author }}</p>
+    {% if post.tags.all %}
+        <p>Тэги: {{ post.tags.all|join:", " }}</p>
+    {% endif %}
+    {{ post.bode|linebreaks }}
+    {% if user.is_authenticated %}
+    <form action="update/">
+        <button>Редактировать пост</button>
+    </form>
+    {% endif %}
+    {% with comments.count as total_comments %}
+        <h3> {{ total_comments }} комментариев </h3>
+    {% endwith %}
+
+    {% for comment in comments %}
+        <div>
+            <p>
+                Комментарий № {{ forloop.counter }} от {{ comment.name }}
+                {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks }}
+        </div>
+    {% empty %}
+        <p>Тут еще нет комментариев</p>
+    {% endfor %}
+    {% if new_comment %}
+        <h2> Ваш комментарий был добавлен</h2>
+    {% else %}
+        <h2>Добавить новый комментарий</h2>
+
+        <form action="." method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Добавить комментарий">
+        </form>
+    {% endif %}
+{% endblock %}

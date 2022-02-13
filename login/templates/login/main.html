@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'login/css/style.css' %}">
+</head>
+<body>
+<div class="header">
+<div class="container header__container">
+    <div class="header-menu__menu">
+        <ul class="header-menu__nav flex">
+            <li class="header-menu__item">
+                <a class="header-menu__item-link" href="/">Главная страница</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="header-menu__item">
+                <a href="{% url 'app_news:post_create' %}" class="header-menu__item-link">Создать новость</a>
+            </li>
+            <li class="header-menu__item">
+                Пользователь: <a href="{% url 'login:edit' %}" class="header-menu__item-link">{{ user.get_username }}</a>
+                <a href="{% url 'login:logout' %}" class="header-menu__item-link">Logout</a>
+            </li>
+            {% else %}
+                <li class="header-menu__item">
+                    <a href="{% url 'login:register' %}" class="header-menu__item-link">Регистрация</a>
+                </li>
+                <li class="header-menu__item">
+                    <a href="{% url 'login:login' %}" class="header-menu__item-link">Login</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+    </div>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
